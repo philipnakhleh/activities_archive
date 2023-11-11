@@ -1,8 +1,18 @@
 import pandas as pd
 from fastapi import FastAPI
+from urllib.parse import urlparse, parse_qs
 
 app = FastAPI()
 
+
+def extract_id_from_drive_link(drive_link):
+    parsed_url = urlparse(drive_link)
+    query_params = parse_qs(parsed_url.query)
+
+    if 'id' in query_params:
+        return query_params['id'][0]
+    else:
+        return None
 
 @app.get('/get_all_games')
 def get_all_games():
@@ -23,7 +33,9 @@ def get_all_games():
         pictures_str = game.get('صور توضيحية', '')
         pictures_list = pictures_str.split(',')
         for picture in pictures_list:
-            dic['pics'] = picture
+            id = extract_id_from_drive_link
+            pic = f'https://drive.google.com/uc?id={id}'
+            dic['pics'] = pic
             break
 
         return_list.append(dic)
