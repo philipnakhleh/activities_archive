@@ -68,7 +68,9 @@ def get_game_by_id(id: int):
     pictures_list = pictures_str.split(',')
     dic['pics'] = []
     for picture in pictures_list:
-        dic['pics'].append(picture)
+        id = extract_id_from_drive_link
+        pic = f'https://drive.google.com/uc?id={id}'
+        dic['pics'].append(pic)
 
 
     return dic
