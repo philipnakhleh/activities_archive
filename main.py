@@ -1,8 +1,20 @@
-import pandas as pd
-from fastapi import FastAPI
 from urllib.parse import urlparse, parse_qs
 
+import pandas as pd
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
+origins = ["*"]
+
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def extract_id_from_drive_link(drive_link):
@@ -33,7 +45,7 @@ def get_all_games():
         pictures_str = game.get('صور توضيحية', '')
         pictures_list = pictures_str.split(',')
         for picture in pictures_list:
-            id = extract_id_from_drive_link
+            id = extract_id_from_drive_link(picture)
             pic = f'https://drive.google.com/uc?id={id}'
             dic['pics'] = pic
             break
@@ -68,7 +80,7 @@ def get_game_by_id(id: int):
     pictures_list = pictures_str.split(',')
     dic['pics'] = []
     for picture in pictures_list:
-        id = extract_id_from_drive_link
+        id = extract_id_from_drive_link(picture)
         pic = f'https://drive.google.com/uc?id={id}'
         dic['pics'].append(pic)
 
