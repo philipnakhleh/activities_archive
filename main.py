@@ -43,12 +43,16 @@ def get_all_games():
         dic['goal'] = game.get('الهدف', 'لا يوجد')
         dic['sigle_or_team'] = game.get('لعبة فردية أو فرق', 'فرق')
         pictures_str = game.get('صور توضيحية', '')
-        pictures_list = pictures_str.split(',')
-        for picture in pictures_list:
-            id = extract_id_from_drive_link(picture)
-            pic = f'https://drive.google.com/uc?id={id}'
-            dic['pics'] = pic
-            break
+
+        try:
+            pictures_list = pictures_str.split(',')
+            for picture in pictures_list:
+                id = extract_id_from_drive_link(picture)
+                pic = f'https://drive.google.com/uc?id={id}'
+                dic['pics'] = pic
+                break
+        except:
+            dic['pics'] = ''
 
         return_list.append(dic)
 
@@ -77,13 +81,18 @@ def get_game_by_id(id: int):
     dic['goal'] = game.get('الهدف', 'لا يوجد')
     dic['single_or_team'] = game.get('لعبة فردية أو فرق', 'فرق')
     pictures_str = game.get('صور توضيحية', '')
-    pictures_list = pictures_str.split(',')
     dic['pics'] = []
-    for picture in pictures_list:
-        id = extract_id_from_drive_link(picture)
-        pic = f'https://drive.google.com/uc?id={id}'
-        dic['pics'].append(pic)
-
+    try:
+        pictures_list = pictures_str.split(',')
+        for picture in pictures_list:
+            try:
+                id = extract_id_from_drive_link(picture)
+                pic = f'https://drive.google.com/uc?id={id}'
+                dic['pics'].append(pic)
+            except:
+                pass
+    except:
+        pass
 
     return dic
 
